@@ -1,0 +1,15 @@
+.back-to-top {
+    position: fixed;
+    top: auto;
+    left: auto;
+    right: 15px;
+    bottom: 15px;
+    font-size: 32px;
+    opacity: 0.8;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+}
