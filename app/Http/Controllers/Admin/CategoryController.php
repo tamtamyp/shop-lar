@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 class CategoryController extends Controller
 {
     public $model = null;
-    
+
     public $params;
     private $pathViewController = 'admin.pages.category.';
     public function __construct()
@@ -157,7 +157,7 @@ class CategoryController extends Controller
         $this->model->insert($data);
         return Redirect::to('admin/category')->with('success', 'Lưu thành công');
     }
-    
+
 
     public function status(Request $request)
     {
@@ -169,7 +169,7 @@ class CategoryController extends Controller
         $this->model->saveItem($params, ['task' => 'change-status']);// doi du lieu trong db
 
 
-        //doi giao dien    
+        //doi giao dien
         $status   = $request->status == 'active' ? 'inactive' : 'active';
 
         $class = 'btn-danger';
@@ -214,6 +214,9 @@ class CategoryController extends Controller
         ]);
     }
 
-    
+    // public function orderItem(Request $request){
+    //     $menuItemOrder = json_decode($request->input('order'));
+    //     $this->orderMenu($menuItemOrder, null);
+    // }
 }
 ?>

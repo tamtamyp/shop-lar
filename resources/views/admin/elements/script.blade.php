@@ -22,6 +22,9 @@
 
 <script src="{{ asset('templates/admin/js/notify.min.js') }}"></script>
 
+<script src="{{ asset('templates/admin/js/jquery.nestable.js') }}"></script>
+
+
 <script type="text/javascript">
     $(".btn-round.is-home-ajax").click(function() {
         let url = $(this).data("url");
@@ -71,4 +74,12 @@
             },
         })
     })
+    $(function() {
+            $('.dd').nestable({
+                maxDepth: 2
+            });
+            $('.dd').on('change', function(e) {
+                
+            });
+        });
 </script>
