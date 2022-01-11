@@ -1,103 +1,5 @@
 @php
 $prefix = 'category';
-// function showCategories($items, $parent_id = 0, $char = '')
-// {
-//     foreach ($items as $key => $item) {
-//         $id          = $item['id'];
-//         $name        = $item['name'];
-//         $status      = $item['status'];
-//         $created     = $item['created'];
-//         $created_by  = $item['created_by'];
-//         $modified    = $item['modified'];
-//         $modified_by = $item['modified_by'];
-//         $display     = $item['display'];
-//         $prefix      = 'category';
-//         // Nếu là chuyên mục con thì hiển thị
-//         if ($item['parent_id'] == $parent_id) {
-//             echo '<tr>';
-//             echo '<td class=""><input class="selectbox" name="ids[]" type="checkbox" value="' . $id . '"></td>';
-//             echo '<td>' . $item['id'] . '</td>';
-//             echo '<td>' . $char . $item['name'] . '</td>';
-//             $class = $status == 'active' ? 'btn-success' : 'btn-danger';
-//             echo '<td><button
-//                         data-url="' .
-//                 route($prefix . '/status', ['status' => $status, 'id' => $id]) .
-//                 '"
-//                         type="button" data-class="btn-success"
-//                         class="btn btn-round status-ajax '.$class.' "
-//                         >' .
-//                 $item['status'] .
-//                 '</button></td>';
-//             $displaylist = $display == 'list' ? 'selected' : '';
-//             $displaygrid = $display == 'grid' ? 'selected' : '';
-//             echo '<td><select
-//                         data-url="' .
-//                 route($prefix . '/display', ['display' => $display, 'id' => $id]) .
-//                 '"
-//                         class="form-control col-md-7 col-xs-12 change-ajax" id="display"
-//                         name="display">
-//                         <option ' .
-//                 $displaylist .
-//                 ' value="list">
-//                         Danh sách</option>
-//                         <option ' .
-//                 $displaygrid .
-//                 ' value="grid">
-//                         Lưới</option>
-//                         </select></td>';
-//             echo '<td>
-//                     <p><i class="fa fa-user"> ' .
-//                 $created_by .
-//                 '</i></p>
-//                     <p><i class="fa fa-clock-o"> ' .
-//                 $created .
-//                 '</i></p>
-//                  </td>';
-
-//             echo '<td>
-//                                                     <p><i class="fa fa-user change-by-'.$id .'">
-//                                                         ' .
-//                 $modified_by .
-//                 '</i></p>
-//                                                     <p><i class="fa fa-clock-o change-time-'.$id .'">
-//                                                         ' .
-//                 $modified .
-//                 '</i></p>
-//                                                 </td>';
-//             echo '<td class="last">
-//                                                     <div class="zvn-box-btn-filter">
-//                                                         <a href="' .
-//                 route($prefix . '/edit') .
-//                 '/' .
-//                 $id .
-//                 '"
-//                                                             type="button" class="btn btn-icon btn-success"
-//                                                             data-toggle="tooltip" data-placement="top"
-//                                                             data-original-title="Edit">
-//                                                             <i class="fa fa-pencil"></i>
-//                                                         </a>
-//                                                         <a href="' .
-//                 route($prefix . '/delete') .
-//                 '/' .
-//                 $id .
-//                 '"
-//                                                             type="button" class="btn btn-icon btn-danger btn-delete"
-//                                                             data-toggle="tooltip" data-placement="top"
-//                                                             data-original-title="Delete">
-//                                                             <i class="fa fa-trash"></i>
-//                                                         </a>
-//                                                     </div>
-//                                                 </td>';
-//             echo '</tr>';
-
-//             // Xóa chuyên mục đã lặp
-//             unset($items[$key]);
-
-//             // Tiếp tục đệ quy để tìm chuyên mục con của chuyên mục đang lặp
-//             showCategories($items, $item['id'], $char . '|---');
-//         }
-//     }
-// }
 @endphp
 @extends('admin.main')
 @section('content')
@@ -112,7 +14,7 @@ $prefix = 'category';
                     mới</a>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
@@ -202,7 +104,7 @@ $prefix = 'category';
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!--box-lists-->
         @if (Session::has('error'))
             <div class="alert alert-danger">
@@ -237,7 +139,7 @@ $prefix = 'category';
                         </div>
                         <div class="x_content">
                             <div class="table-responsive" id="">
-                                <div class="alignleft actions bulkactions">
+                                {{-- <div class="alignleft actions bulkactions">
                                     <select name="bulk_action" class="form-control" id="bulk_action">
                                         <option value selected>Hành động</option>
                                         <option value="delete">Xóa</option>
@@ -247,8 +149,104 @@ $prefix = 'category';
                                 </div>
                                 <div>
                                     <input type="submit" id="apply" class="btn btn-primary" name="apply" value="Áp dụng">
+                                </div> --}}
+
+                                <div class="col-12">
+                                    <div class="main-card mb-3 card">
+                                        <div class="card-body menu-builder">
+                                            <div class="dd" id="nestable">
+                                                <ol class="dd-list">
+                                                    @forelse($items as $item)
+                                                        @php
+                                                            $id = $item['id'];
+                                                            $name = $item['name'];
+                                                            $status = $item['status'];
+                                                            $created = $item['created'];
+                                                            $created_by = $item['created_by'];
+                                                            $modified = $item['modified'];
+                                                            $modified_by = $item['modified_by'];
+                                                            $slug = $item['slug'];
+                                                        @endphp
+                                                        <li class="dd-item" data-id="{{ $id }}">
+                                                            <div class="pull-right item_actions">
+                                                                <a class="btn btn-sm btn-primary float-right edit"
+                                                                    href="{{ route($prefix . '/edit') . '/' . $id }}">
+                                                                    <i class="fa fa-pencil"></i>
+                                                                    <span>Edit</span>
+                                                                </a>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-danger float-right delete"
+                                                                    onclick="deleteData({{ $id }})">
+                                                                    <i class="fa fa-trash"></i>
+                                                                    <span>Delete</span>
+                                                                </button>
+                                                                <form id="delete-form-{{ $id }}"
+                                                                    action="{{ route($prefix . '/delete') . '/' . $id }}"
+                                                                    method="POST" style="display: none;">
+                                                                    @csrf()
+                                                                    @method('DELETE')
+                                                                </form>
+                                                            </div>
+                                                            <div class="dd-handle">{{ $name }}</div>
+                                                            @if ($item->children)
+                                                                <ol class="dd-list">
+                                                                    @foreach ($item->children as $child)
+
+                                                                        @php
+                                                                            $id = $child['id'];
+                                                                            $name = $child['name'];
+                                                                            $status = $child['status'];
+                                                                            $created = $child['created'];
+                                                                            $created_by = $child['created_by'];
+                                                                            $modified = $child['modified'];
+                                                                            $modified_by = $child['modified_by'];
+                                                                            $slug = $child['slug'];
+                                                                        @endphp
+
+                                                                        <li class="dd-item"
+                                                                            data-id="{{ $id }}">
+                                                                            <div class="pull-right item_actions">
+
+                                                                                <a class="btn btn-sm btn-primary float-right edit"
+                                                                                    href="{{ route($prefix . '/edit') . '/' . $id }}">
+                                                                                    <i class="fa fa-pencil"></i>
+                                                                                    <span>Edit</span>
+                                                                                </a>
+                                                                                <button type="button"
+                                                                                    class="btn btn-sm btn-danger float-right delete"
+                                                                                    onclick="deleteData({{ $id }})">
+                                                                                    <i class="fa fa-trash"></i>
+                                                                                    <span>Delete</span>
+                                                                                </button>
+                                                                                <form id="delete-form-{{ $id }}"
+                                                                                    action="{{ route($prefix . '/delete') . '/' . $id }}"
+                                                                                    method="POST" style="display: none;">
+                                                                                    @csrf()
+                                                                                    @method('DELETE')
+                                                                                </form>
+                                                                            </div>
+                                                                            <div class="dd-handle">
+                                                                                <span>{{ $name }}</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ol>
+                                                            @endif
+                                                        </li>
+                                                    @empty
+                                                        <div class="text-center">
+                                                            <strong>No menu item found.</strong>
+                                                        </div>
+                                                    @endforelse
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
                                 </div>
-                                <table class="table table-striped jambo_table bulk_action" id="list-slider">
+
+                                {{-- <table class="table table-striped jambo_table bulk_action" id="list-slider">
                                     <thead>
                                         <tr class="headings">
                                             <th class="column-title"><input type="checkbox" class="selectall"></th>
@@ -265,16 +263,16 @@ $prefix = 'category';
                                         @foreach ($items as $item)
 
                                             @php
-                                                $id          = $item['id'];
-                                                $name        = $item['name'];
-                                                $status      = $item['status'];
-                                                $created     = $item['created'];
-                                                $created_by  = $item['created_by'];
-                                                $modified    = $item['modified'];
+                                                $id = $item['id'];
+                                                $name = $item['name'];
+                                                $status = $item['status'];
+                                                $created = $item['created'];
+                                                $created_by = $item['created_by'];
+                                                $modified = $item['modified'];
                                                 $modified_by = $item['modified_by'];
-                                                $slug        = $item['slug'];
+                                                $slug = $item['slug'];
                                             @endphp
-                                            
+
                                             <tr class="even pointer" id="ahaha">
                                                 <td class=""><input class="selectbox" name="ids[]"
                                                         type="checkbox" value="{{ $id }}"></td>
@@ -284,7 +282,7 @@ $prefix = 'category';
 
 
                                                 </td>
-                                                
+
                                                 <td>{{ $slug }}</td>
                                                 <td>
                                                     <p><i class="fa fa-user"> {{ $created_by }}</i></p>
@@ -328,63 +326,65 @@ $prefix = 'category';
                                                 @foreach ($item->children as $child)
 
                                                     @php
-                                                $id          = $child['id'];
-                                                $name        = $child['name'];
-                                                $status      = $child['status'];
-                                                $created     = $child['created'];
-                                                $created_by  = $child['created_by'];
-                                                $modified    = $child['modified'];
-                                                $modified_by = $child['modified_by'];
-                                                $slug        = $child['slug'];
-                                            @endphp
-                                            <tr class="even pointer" id="ahaha">
-                                                <td class=""><input class="selectbox" name="ids[]"
-                                                        type="checkbox" value="{{$id }}"></td>
-                                                <td class="">{{ $id }}</td>
-                                                <td>
-                                                    |---{{ $name }}
+                                                        $id = $child['id'];
+                                                        $name = $child['name'];
+                                                        $status = $child['status'];
+                                                        $created = $child['created'];
+                                                        $created_by = $child['created_by'];
+                                                        $modified = $child['modified'];
+                                                        $modified_by = $child['modified_by'];
+                                                        $slug = $child['slug'];
+                                                    @endphp
+                                                    <tr class="even pointer" id="ahaha">
+                                                        <td class=""><input class="selectbox"
+                                                                name="ids[]" type="checkbox" value="{{ $id }}">
+                                                        </td>
+                                                        <td class="">{{ $id }}</td>
+                                                        <td>
+                                                            |---{{ $name }}
 
 
-                                                </td>
-                                                <td>{{ $slug }}</td>
-                                                <td>
-                                                    <p><i class="fa fa-user"> {{ $created_by }}</i></p>
-                                                    <p><i class="fa fa-clock-o"> {{ $created }}</i></p>
-                                                </td>
-                                                <td>
-                                                    <p><i class="fa fa-user change-by-{{ $id }}">
-                                                            {{ $modified_by }}</i></p>
-                                                    <p><i class="fa fa-clock-o change-time-{{ $id }}">
-                                                            {{ $modified }}</i></p>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        data-url="{{ route($prefix . '/status', ['status' => $status, 'id' => $id]) }}"
-                                                        type="button" data-class="btn-success"
-                                                        class="btn btn-round status-ajax
+                                                        </td>
+                                                        <td>{{ $slug }}</td>
+                                                        <td>
+                                                            <p><i class="fa fa-user"> {{ $created_by }}</i></p>
+                                                            <p><i class="fa fa-clock-o"> {{ $created }}</i></p>
+                                                        </td>
+                                                        <td>
+                                                            <p><i class="fa fa-user change-by-{{ $id }}">
+                                                                    {{ $modified_by }}</i></p>
+                                                            <p><i class="fa fa-clock-o change-time-{{ $id }}">
+                                                                    {{ $modified }}</i></p>
+                                                        </td>
+                                                        <td>
+                                                            <button
+                                                                data-url="{{ route($prefix . '/status', ['status' => $status, 'id' => $id]) }}"
+                                                                type="button" data-class="btn-success"
+                                                                class="btn btn-round status-ajax
                                                         @php
                                                         $class = $status =='active' ? 'btn-success':'btn-danger';
                                                         echo $class;
                                                         @endphp ">{{ $status }}</button>
-                                                </td>
-                                                <td class="last">
-                                                    <div class="zvn-box-btn-filter">
-                                                        <a href="{{ route($prefix . '/edit') . '/' . $id }}"
-                                                            type="button" class="btn btn-icon btn-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="Edit">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                        <a href="{{ route($prefix . '/delete') . '/' . $id }}"
-                                                            type="button" class="btn btn-icon btn-danger btn-delete"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="Delete">
-                                                            <i class="fa fa-trash"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
+                                                        </td>
+                                                        <td class="last">
+                                                            <div class="zvn-box-btn-filter">
+                                                                <a href="{{ route($prefix . '/edit') . '/' . $id }}"
+                                                                    type="button" class="btn btn-icon btn-success"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    data-original-title="Edit">
+                                                                    <i class="fa fa-pencil"></i>
+                                                                </a>
+                                                                <a href="{{ route($prefix . '/delete') . '/' . $id }}"
+                                                                    type="button"
+                                                                    class="btn btn-icon btn-danger btn-delete"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    data-original-title="Delete">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
 
-                                            </tr>
+                                                    </tr>
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -399,7 +399,7 @@ $prefix = 'category';
 
                                     </div>
 
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     </div>
@@ -410,8 +410,8 @@ $prefix = 'category';
         <!--end-box-lists-->
         <!--box-pagination-->
 
-        <div class="row" style="
-                 @if (count($items) < 1)
+        {{-- <div class="row" style="
+                      @if (count($items) < 1)
             display:none;
             @endif
 
@@ -445,12 +445,12 @@ $prefix = 'category';
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!--end-box-pagination-->
     </div>
     <!-- /page content -->
     {{-- HIGHLIGHTCODE --}}
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         window.addEventListener("DOMContentLoaded", function(e) {
             var myHilitor2 = new Hilitor("idAdminSearch");
             myHilitor2.setMatchType("left");
@@ -458,5 +458,5 @@ $prefix = 'category';
                 myHilitor2.apply(this.value);
             }, false);
         }, false);
-    </script>
+    </script> --}}
 @endsection
