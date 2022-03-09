@@ -11,6 +11,7 @@
 <script src="{{ asset('templates/frontend/assets/js/my-js.js') }}"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
+<script src="{{ asset('templates/file/js/custom.js') }}"></script>
 
 <script type="text/javascript">
     function addToCart(e) {
@@ -31,9 +32,9 @@
             success: function(response) {
                 if (response.status === 200) {
                     btn.notify(response.message, {
-                    position: "top center",
-                    className: "success",
-                });
+                        position: "top center",
+                        className: "success",
+                    });
                 }
             },
             error: function() {
@@ -85,25 +86,5 @@
             return false;
         }
     })
-    $('.btn-show-detail').click(function(){
-            let url = $(this).data('url');
-            $.ajax({
-                type:'get',
-                url: url,
-                dataType: 'json',
-                success: function(response){
-                    console.log(response.product);
-                    $('.customer-id').text(response.items.id);
-                    $('.customer-name').text(response.items.order_name);
-                    $('.customer-phone').text(response.items.order_phone);
-                    $('.customer-email').text(response.items.order_email);
-                    $('.customer-address').text(response.items.order_address);
-                    var pro ="";
-                    response.product.forEach(element =>{
-                        pro += '<tr class="even pointer"><td>'+element['product_name']+'</td><td>'+element['quantity']+'</td><td>'+element['price']+'&nbsp;<span>₫</span></td> </tr>'
-                    });
-                    document.getElementById('ds_product').innerHTML = pro;
-                },
-            })
-        })
+    $('.btn-show-detail').click(Custom.btnShowDetailClick)
 </script>
