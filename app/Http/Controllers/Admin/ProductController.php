@@ -11,13 +11,15 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use App\Exports\ProductExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
     public $model = null;
     public $params;
     private $pathViewController = 'admin.pages.product.';
-    
+
 
 
     public function __construct()
@@ -29,38 +31,46 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $items = $this->model->getItems($request,$this->params, ['task' => 'show-product']);
+        // $items = $this->model->getItems($request,$this->params, ['task' => 'show-product']);
+        $status = $request->status;
+        $search_value = $request->search_value;
+        $query = mainModel::orderby('id','desc');
+        if (!empty($status)) {
+            $query = $query->where('status', $status);
+        }
+        if (!empty($search_value)) {
+            $query = $query->where('name', 'like', '%' . $search_value . '%');
+        }
+        $items = $query->paginate(5);
         return view(
-            $this->pathViewController.'index',
-            [
-                'items' => $items,
-            ]
+            $this->pathViewController . 'index',
+            compact('status', 'items')
         );
     }
 
-    // public function form()
-    // {
-    //     // dd(request()->search_value);
-    //     $items = $this->model->getItems();
-    //     $items = $this->model::orderBy('id', 'ASC')->search()->paginate(3);
-
-    //     return view('admin.pages.post.index',compact('items'));
-    // }
+    public function exportProduct(Request $request)
+    {
+        $filters = [
+            'status' => $request->status,
+        ];
+        $response = Excel::download(new ProductExport($filters), 'exportProduct.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        return $response;
+    }
 
     public function delete(Request $request, $id)
     {
         $items = mainModel::find($id);
         if ($items['status'] == 'active') {
             return response()->json([
-                'message' =>'Không thể xóa sản phẩm đang active',
+                'message' => 'Không thể xóa sản phẩm đang active',
             ]);
         } else {
             $this->model->where('id', $request->id)->delete();
             return response()->json([
                 'status_code' => 200,
-                'message'     => 'Xóa thành công']);
+                'message'     => 'Xóa thành công'
+            ]);
         }
-
     }
 
     public function action(Request $request)
@@ -85,11 +95,11 @@ class ProductController extends Controller
 
         $items = $this->model->getEdit($request);
         $id = $request->id;
-        $category = CategoryModel::where('parent_id',0)->where('status','active')->orderby('id','ASC')->get();
-        return view($this->pathViewController.'edit', ['items' => $items],['category' => $category]);
+        $category = CategoryModel::where('parent_id', 0)->where('status', 'active')->orderby('id', 'ASC')->get();
+        return view($this->pathViewController . 'edit', ['items' => $items], ['category' => $category]);
     }
 
-    public function update(Request $request, $id )
+    public function update(Request $request, $id)
     {
         $this->validate(
             $request,
@@ -105,8 +115,8 @@ class ProductController extends Controller
                 'price.required' => 'Bạn chưa nhập giá',
             ]
         );
-              $product       = mainModel::find($id);
-              $data          = array();
+        $product       = mainModel::find($id);
+        $data          = array();
         $data['name']        = $request->name;
         $data['content']     = $request->content;
         $data['description'] = $request->description;
@@ -121,15 +131,15 @@ class ProductController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $data['modified'] = date('Y-m-d H:i:s', time());
         $this->model->where('product.id', $request->id)->update($data);
-        return Redirect::to('admin/product')->with('success','Cập nhật thành công');
+        return Redirect::to('admin/product')->with('success', 'Cập nhật thành công');
     }
 
     public function add(Request $request)
     {
 
-        $items = DB::table('category')->orderby('id','desc')->get();
-        $category = CategoryModel::where('parent_id',0)->where('status','active')->orderby('id','ASC')->get();
-        return view($this->pathViewController.'add',compact('items','category'));
+        $items = DB::table('category')->orderby('id', 'desc')->get();
+        $category = CategoryModel::where('parent_id', 0)->where('status', 'active')->orderby('id', 'ASC')->get();
+        return view($this->pathViewController . 'add', compact('items', 'category'));
     }
 
     public function save(Request $request)
@@ -148,7 +158,7 @@ class ProductController extends Controller
                 'price.required' => 'Bạn chưa nhập giá',
             ]
         );
-                    $data          = array();
+        $data          = array();
         $data['name']        = $request->name;
         $data['description'] = $request->description;
         $data['category_id'] = $request->category_id;
@@ -156,35 +166,36 @@ class ProductController extends Controller
         $data['status']      = $request->status;
         $data['type']        = $request->type;
         $data['price']       = $request->price;
-        if(!empty($request->sale_price)) 
-        {$data['sale_price']        = $request->sale_price;}
+        if (!empty($request->sale_price)) {
+            $data['sale_price']        = $request->sale_price;
+        }
         $data['created_by'] = session()->get('username');
         $data['thumb']      = $request->thumb;
         $data['thumb_list']  = $request->thumb_list;
         $this->model->insert($data);
         return Redirect::to('admin/product')->with('success', 'Lưu thành công');
     }
-    public function showActive(Request $request)
-    {
-        $items = $this->model->getItems($request,$this->params, ['task' => 'change-active']);
-        return view(
-            $this->pathViewController.'index',
-            [
-                'items' => $items,
-            ]
-        );
-    }
+    // public function showActive(Request $request)
+    // {
+    //     $items = $this->model->getItems($request, $this->params, ['task' => 'change-active']);
+    //     return view(
+    //         $this->pathViewController . 'index',
+    //         [
+    //             'items' => $items,
+    //         ]
+    //     );
+    // }
 
-    public function showInactive(Request $request)
-    {
-        $items = $this->model->getItems($request,$this->params, ['task' => 'change-inactive']);
-        return view(
-            $this->pathViewController.'index',
-            [
-                'items' => $items,
-            ]
-        );
-    }
+    // public function showInactive(Request $request)
+    // {
+    //     $items = $this->model->getItems($request, $this->params, ['task' => 'change-inactive']);
+    //     return view(
+    //         $this->pathViewController . 'index',
+    //         [
+    //             'items' => $items,
+    //         ]
+    //     );
+    // }
 
     public function status(Request $request)
     {
@@ -192,14 +203,14 @@ class ProductController extends Controller
         $params["currentStatus"] = $request->status;
         $params["id"]            = $request->id;
         $params["modified"]      = date('Y-m-d H:i:s', time());
-        $this->model->saveItem($params, ['task' => 'change-status']);// doi du lieu trong db
+        $this->model->saveItem($params, ['task' => 'change-status']); // doi du lieu trong db
 
 
         //doi giao dien    
         $status   = $request->status == 'active' ? 'inactive' : 'active';
 
         $class = 'btn-danger';
-        if($status == 'active'){
+        if ($status == 'active') {
             $class = 'btn-success';
         }
 
@@ -237,5 +248,4 @@ class ProductController extends Controller
             'modified_by' => $modified_by,
         ]);
     }
-    
 }

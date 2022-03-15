@@ -126,18 +126,16 @@ Route::group(['prefix' => $prefixAdmin,'namespace' => 'Admin','middleware'=>['pe
     $prefix         = 'product';
     $controller = ProductController::class;
     Route::group(['prefix' => $prefix], function () use ($prefix, $controller) {
-
         Route::get('/',                                 [$controller, 'index'])->name($prefix);
-        // Route::get('/form',                             [$controller, 'form'])->name("$prefix/form");
-        // Route::get('/form/{id?}',                    [$controller, 'form'])->name("$prefix/form");
+        Route::post('/exportProduct',                   [$controller, 'exportProduct'])->name('exportProduct');
         Route::get('/edit/{id?}',                       [$controller, 'edit'])->name("$prefix/edit");
         Route::post('/update/{id?}',                    [$controller, 'update'])->name("$prefix/update");
         Route::get('/add',                              [$controller, 'add'])->name("$prefix/add");
         Route::post('/save',                            [$controller, 'save'])->name("$prefix/save");
         Route::get('/delete/{id?}',                     [$controller, 'delete'])->name("$prefix/delete");
         Route::post('/action',                          [$controller, 'action'])->name("$prefix/action");
-        Route::get('/status=active',                    [$controller, 'showActive'])->name("$prefix/showActive");
-        Route::get('/status=inactive',                  [$controller, 'showInactive'])->name("$prefix/showInactive");
+        // Route::get('/status=active',                    [$controller, 'showActive'])->name("$prefix/showActive");
+        // Route::get('/status=inactive',                  [$controller, 'showInactive'])->name("$prefix/showInactive");
         Route::get('/change-status-{status}/{id?}',     [$controller, 'status'])->name("$prefix/status")->where('id', '[0-9]+');
         Route::get('/change-type-{type}/{id?}',         [$controller, 'type'])->name("$prefix/type")->where('id', '[0-9]+');
         // Route::get('change-status-{status}/{id}',   ['as' => $controllerName . '/status',      'uses' => $controller . 'status'])->where('id', '[0-9]+');

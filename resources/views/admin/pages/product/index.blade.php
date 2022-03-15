@@ -28,7 +28,7 @@ $prefix = 'product';
                     </div>
                     <div class="x_content">
                         <div class="row">
-                            <div class="col-md-6 showStatus">
+                            {{-- <div class="col-md-6 showStatus">
                                 @if (DB::table($prefix)->count() != 0)
                                     <a href="{{ route($prefix) }}" type="button" class="btn btn-primary">
                                         All <span class="badge bg-white">
@@ -65,10 +65,48 @@ $prefix = 'product';
                                         </span>
                                     </a>
                                 @endif
-
-
-                            </div>
-                            <form action="">
+                                <div>
+                                    <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-file-excel"></i> Export Excel
+                                    </button>
+                                </div>
+                            </div> --}}
+                            {{-- <div class="col-md-6">
+                                {!! Form::open(['method' => 'get']) !!}
+                                <button class="btn btn-primary">
+                                    All <span class="badge bg-white">
+                                        @php
+                                            $count = DB::table($prefix)->count();
+                                            echo $count;
+                                        @endphp
+                                    </span>
+                                </button>
+                                <button class="btn btn-success">
+                                    Active <span class="badge bg-white">
+                                        @php
+                                            $count = DB::table($prefix)
+                                                ->where('status', 'active')
+                                                ->count();
+                                            echo $count;
+                                        @endphp
+                                    </span>
+                                </button>
+                                <button class="btn btn-success">
+                                    Inactive <span class="badge bg-white">
+                                        @php
+                                            $count = DB::table($prefix)
+                                                ->where('status', 'inactive')
+                                                ->count();
+                                            echo $count;
+                                        @endphp
+                                    </span>
+                                </button>
+                                {{ Form::close() }}
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fas fa-file-excel"></i> Export Excel
+                                </button>
+                            </div> --}}
+                            {{-- <form action="">
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <div class="input-group-btn">
@@ -100,222 +138,267 @@ $prefix = 'product';
                                         <input type="hidden" name="search_field" value="all">
                                     </div>
                                 </div>
-                            </form>
+                            </form> --}}
+                            </>
+                            <div class="row" style="margin-bottom: 50px;">
+                                <div class="col-lg-12">
+                                    {!! Form::open(['method' => 'get']) !!}
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <select class="form-control" name="status" onchange="this.form.submit()">
+                                                <option value="">--- Trạng thái ---</option>
+                                                <option {{ $status == 'active' ? 'selected' : '' }} value="active">Active
+                                                </option>
+                                                <option {{ $status == 'inactive' ? 'selected' : '' }} value="inactive">
+                                                    Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="search_value" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
+                                    </div>
+                                    {!! Form::close() !!}
+                                    <div class="col-sm-2 mb-lg-4">
+                                        <form action="{{ route('exportProduct') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="status"
+                                                value="{{ request()->has('status') ? request()->status : '' }}" />
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="fas fa-file-excel"></i> Export Excel
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--box-lists-->
-        @if (Session::has('error'))
-            <div class="alert alert-danger">
+            <!--box-lists-->
+            @if (Session::has('error'))
+                <div class="alert alert-danger">
 
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ Session::get('error') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ Session::get('error') }}
 
-            </div>
+                </div>
+            @endif
+            @if (Session::has('success'))
+                <div class="alert alert-success">
 
-        @endif
-        @if (Session::has('success'))
-            <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ Session::get('success') }}
 
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ Session::get('success') }}
-
-            </div>
-
-        @endif
-        <form method="post" action="{{ route($prefix . '/action') }}" id="formData">
-            @csrf
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Danh sách</h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li class="pull-right"><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <div class="table-responsive" id="">
-                                <div class="alignleft actions bulkactions">
-                                    <select name="bulk_action" class="form-control" id="bulk_action">
-                                        <option value selected>Hành động</option>
-                                        <option value="delete">Xóa</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inctive</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <input type="submit" id="apply" class="btn btn-primary" name="apply" value="Áp dụng">
-                                </div>
-                                <table class="table table-striped jambo_table bulk_action" id="list-slider">
-                                    <thead>
-                                        <tr class="headings">
-                                            <th class="column-title"><input type="checkbox" class="selectall"></th>
-                                            <th class="column-title">Id</th>
-                                            <th class="column-title"> </th>
-                                            <th class="column-title">Tên sản phẩm</th>
-                                            <th class="column-title">Danh mục</th>
-                                            <th class="column-title">Giá</th>
-                                            <th class="column-title">Tạo mới</th>
-                                            <th class="column-title">Chỉnh sửa</th>
-                                            <th class="column-title">Kiểu sản phẩm</th>
-                                            <th class="column-title">Trạng thái</th>
-                                            <th class="column-title">Hành động</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="idAdminSearch">
-                                        @foreach ($items as $item)
-
-                                            @php
-                                                $id           = $item['id'];
-                                                $name         = $item['name'];
-                                                $status       = $item['status'];
-                                                $categoryName = $item['category_name'];
-                                                $thumb        = Templates::showImageMini($controllerName, $item['thumb'], $name);
-                                                $price        = $item['price'];
-                                                $sale_price   = $item['sale_price'];
-                                                $type         = $item['type'];
-                                                $created      = $item['created'];
-                                                $created_by   = $item['created_by'];
-                                                $modified     = $item['modified'];
-                                                $modified_by  = $item['modified_by'];
-                                            @endphp
-                                            <tr class="even pointer" id="ahaha">
-                                                <td class=""><input class="selectbox" name="ids[]"
-                                                        type="checkbox" value="{{ $id }}"></td>
-                                                <td class="">{{ $id }}</td>
-                                                <td>{!! $thumb !!}</td>
-                                                <td width="15%">
-                                                    <div><b></b> {{ $name }}</div><br>
-                                                </td>
-                                                <td>{!! $categoryName !!}</td>
-                                                <td>
-                                                    @if (!empty($sale_price))
-                                                    <del aria-hidden="true"><span>{{$price}}&nbsp;<span>₫</span></span></del>
-                                                    <br><span>{{$sale_price}}&nbsp;<span>₫</span></span>
-                                                    @else {{$price}}&nbsp;<span>₫</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <p><i class="fa fa-user"> {{ $created_by }}</i></p>
-                                                    <p><i class="fa fa-clock-o"> {{ $created }}</i></p>
-                                                </td>
-                                                <td>
-                                                    <p><i class="fa fa-user change-by-{{ $id }}"> {{ $modified_by }}</i></p>
-                                                    <p><i class="fa fa-clock-o change-time-{{ $id }}"> {{ $modified }}</i></p>
-                                                </td>
-                                                <td>
-                                                    <select 
-                                                        data-url="{{ route($prefix . '/type', ['type' => $type, 'id' => $id]) }}"
-                                                        class="form-control col-md-7 col-xs-12 change-ajax" id="type"
-                                                        name="type">
-                                                        <option {{ $type == 'featured' ? 'selected' : '' }} value="featured">
-                                                            Nổi bật</option>
-                                                        <option {{ $type == 'normal' ? 'selected' : '' }} value="normal">
-                                                            Bình thường</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        data-url="{{ route($prefix . '/status', ['status' => $status, 'id' => $id]) }}"
-                                                        type="button" data-class="btn-success"
-                                                        class="btn btn-round status-ajax
+                </div>
+            @endif
+            <form method="post" action="{{ route($prefix . '/action') }}" id="formData">
+                @csrf
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Danh sách</h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li class="pull-right"><a class="collapse-link"><i
+                                                class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div class="table-responsive" id="">
+                                    <div class="alignleft actions bulkactions">
+                                        <select name="bulk_action" class="form-control" id="bulk_action">
+                                            <option value selected>Hành động</option>
+                                            <option value="delete">Xóa</option>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inctive</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <input type="submit" id="apply" class="btn btn-success" name="apply"
+                                            value="Áp dụng">
+                                    </div>
+                                    <table class="table table-striped jambo_table bulk_action" id="list-slider">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="column-title"><input type="checkbox" class="selectall">
+                                                </th>
+                                                <th class="column-title">Id</th>
+                                                <th class="column-title"> </th>
+                                                <th class="column-title">Tên sản phẩm</th>
+                                                <th class="column-title">Danh mục</th>
+                                                <th class="column-title">Giá</th>
+                                                <th class="column-title">Tạo mới</th>
+                                                <th class="column-title">Chỉnh sửa</th>
+                                                <th class="column-title">Kiểu sản phẩm</th>
+                                                <th class="column-title">Trạng thái</th>
+                                                <th class="column-title">Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="idAdminSearch">
+                                            @foreach ($items as $item)
+                                                @php
+                                                    $id = $item['id'];
+                                                    $name = $item['name'];
+                                                    $status = $item['status'];
+                                                    $categoryName = $item['category_name'];
+                                                    $thumb = Templates::showImageMini($controllerName, $item['thumb'], $name);
+                                                    $price = $item['price'];
+                                                    $sale_price = $item['sale_price'];
+                                                    $type = $item['type'];
+                                                    $created = $item['created'];
+                                                    $created_by = $item['created_by'];
+                                                    $modified = $item['modified'];
+                                                    $modified_by = $item['modified_by'];
+                                                @endphp
+                                                <tr class="even pointer" id="ahaha">
+                                                    <td class=""><input class="selectbox" name="ids[]"
+                                                            type="checkbox" value="{{ $id }}"></td>
+                                                    <td class="">{{ $id }}</td>
+                                                    <td>{!! $thumb !!}</td>
+                                                    <td width="15%">
+                                                        <div><b></b> {{ $name }}</div><br>
+                                                    </td>
+                                                    <td>{!! $categoryName !!}</td>
+                                                    <td>
+                                                        @if (!empty($sale_price))
+                                                            <del
+                                                                aria-hidden="true"><span>{{ $price }}&nbsp;<span>₫</span></span></del>
+                                                            <br><span>{{ $sale_price }}&nbsp;<span>₫</span></span>
+                                                        @else
+                                                            {{ $price }}&nbsp;<span>₫</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <p><i class="fa fa-user"> {{ $created_by }}</i></p>
+                                                        <p><i class="fa fa-clock-o"> {{ $created }}</i></p>
+                                                    </td>
+                                                    <td>
+                                                        <p><i class="fa fa-user change-by-{{ $id }}">
+                                                                {{ $modified_by }}</i></p>
+                                                        <p><i class="fa fa-clock-o change-time-{{ $id }}">
+                                                                {{ $modified }}</i></p>
+                                                    </td>
+                                                    <td>
+                                                        <select
+                                                            data-url="{{ route($prefix . '/type', ['type' => $type, 'id' => $id]) }}"
+                                                            class="form-control col-md-7 col-xs-12 change-ajax" id="type"
+                                                            name="type">
+                                                            <option {{ $type == 'featured' ? 'selected' : '' }}
+                                                                value="featured">
+                                                                Nổi bật</option>
+                                                            <option {{ $type == 'normal' ? 'selected' : '' }}
+                                                                value="normal">
+                                                                Bình thường</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            data-url="{{ route($prefix . '/status', ['status' => $status, 'id' => $id]) }}"
+                                                            type="button" data-class="btn-success"
+                                                            class="btn btn-round status-ajax
                                                         @php
                                                         $class = $status =='active' ? 'btn-success':'btn-danger';
                                                         echo $class;
                                                         @endphp ">{{ $status }}</button>
-                                                </td>
-                                                <td class="last">
-                                                    <div class="zvn-box-btn-filter">
-                                                        <a href="{{ route($prefix . '/edit') . '/' . $id }}"
-                                                            type="button" class="btn btn-icon btn-success"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="Edit">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                        <a href="{{ route($prefix . '/delete') . '/' . $id }}"
-                                                            type="button" class="btn btn-icon btn-danger btn-delete"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="Delete">
-                                                            <i class="fa fa-trash"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                                    </td>
+                                                    <td class="last">
+                                                        <div class="zvn-box-btn-filter">
+                                                            <a href="{{ route($prefix . '/edit') . '/' . $id }}"
+                                                                type="button" class="btn btn-icon btn-success"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                data-original-title="Edit">
+                                                                <i class="fa fa-pencil"></i>
+                                                            </a>
+                                                            <a href="{{ route($prefix . '/delete') . '/' . $id }}"
+                                                                type="button" class="btn btn-icon btn-danger btn-delete"
+                                                                data-toggle="tooltip" data-placement="top"
+                                                                data-original-title="Delete">
+                                                                <i class="fa fa-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
 
-                                    </tbody>
+                                        </tbody>
 
-                                </table>
-                                @if (count($items) == 0)
-                                    <div class="alert alert-default" align="center">
+                                    </table>
+                                    @if (count($items) == 0)
+                                        <div class="alert alert-default" align="center">
 
-                                        Danh sách đang cập nhật.
+                                            Danh sách đang cập nhật.
 
-                                    </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-                                @endif
+            <!--end-box-lists-->
+            <!--box-pagination-->
+
+            <div class="row" style=" @if (count($items) < 1) display:none; @endif
+
+                                                                                ">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Phân trang
+
+                            </h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li class="pull-right"><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="m-b-0"><span class="label label-success label-pagination"></span>
+                                        <button class="btn btn-outline-primary" type="">All(@php
+                                            $count = DB::table($prefix)->count();
+                                            echo $count;
+                                        @endphp)</button>
+                                        <button class="btn btn-outline-primary" type="">Active(@php
+                                            $count = DB::table($prefix)
+                                                ->where('status', 'active')
+                                                ->count();
+                                            echo $count;
+                                        @endphp)</button>
+                                        <button class="btn btn-outline-primary" type="">Inactive(@php
+                                            $count = DB::table($prefix)
+                                                ->where('status', 'inactive')
+                                                ->count();
+                                            echo $count;
+                                        @endphp)</button>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination zvn-pagination">
+                                            {!! $items->appends(request()->all())->links() !!}
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
-
-        <!--end-box-lists-->
-        <!--box-pagination-->
-
-        <div class="row" style="
-                 @if (count($items) < 1)
-            display:none;
-            @endif
-
-            ">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Phân trang
-                        </h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li class="pull-right"><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </li>
-
-                        </ul>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="x_content">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="m-b-0"><span class="label label-success label-pagination"></span></p>
-                            </div>
-                            <div class="col-md-6">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination zvn-pagination">
-                                        {!! $items->appends(request()->all())->links() !!}
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--end-box-pagination-->
         </div>
-        <!--end-box-pagination-->
-    </div>
-    <!-- /page content -->
-    {{-- HIGHLIGHTCODE --}}
-    <script type="text/javascript">
-        window.addEventListener("DOMContentLoaded", function(e) {
-            var myHilitor2 = new Hilitor("idAdminSearch");
-            myHilitor2.setMatchType("left");
-            document.getElementById("keywords").addEventListener("keyup", function(e) {
-                myHilitor2.apply(this.value);
-            }, false);
-        }, false);
-    </script>
-@endsection
+        <!-- /page content -->
+    @endsection

@@ -21,6 +21,7 @@
 <script src="{{ asset('templates/admin/js/myjs.js') }}"></script>
 
 <script src="{{ asset('templates/admin/js/notify.min.js') }}"></script>
+<script src="https://kit.fontawesome.com/c4bc9982b0.js" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
     $(".btn-round.is-home-ajax").click(function() {

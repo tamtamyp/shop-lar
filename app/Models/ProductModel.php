@@ -16,34 +16,34 @@ class ProductModel extends Model
     // {
     //     $this->table  = 'product as p';
     // }
-    public function getItems(Request $request, $params = null, $options = null)
-    {
+    // public function getItems(Request $request, $params = null, $options = null)
+    // {
 
-        $result = null;
-        $query = $this->join('category as c', 'category_id', '=', 'c.id')->select('product.id', 'product.name', 'product.content', 'product.description', 'product.price', 'product.sale_price', 'product.status', 'product.type', 'product.thumb', 'product.created', 'product.created_by', 'product.modified', 'product.modified_by', 'c.name as category_name')->orderby('product.id', 'desc');
-        if ($options['task'] == 'change-all') {
-            $result = $query->search()->paginate(5);
-        }
-        if ($options['task'] == 'change-active') {
-            $result = $query->where('product.status', 'active')->search()->paginate(5);
-        }
-        if ($options['task'] == 'change-inactive') {
-            $result = $query->where('product.status', 'inactive')->search()->paginate(5);
-        }
-        //======= show ra trang chủ ========
-        if ($options['task'] == 'show-product') {
-            $result = $query->where('product.status', 'active')->paginate(12);
-        }
-        //======= show sản phẩm nổi bật ra trang chủ ========
-        if ($options['task'] == 'show-featured') {
-            $result = $query->where('product.type', 'featured')->get();
-        }
-        //======= show sản phẩm theo danh mục ra trang chủ ========
-        if ($options['task'] == 'show-with-category') {
-            $result = $query->where('product.category_id', $request->id)->paginate(12);
-        }
-        return $result;
-    }
+    //     $result = null;
+    //     $query = $this->join('category as c', 'category_id', '=', 'c.id')->select('product.id', 'product.name', 'product.content', 'product.description', 'product.price', 'product.sale_price', 'product.status', 'product.type', 'product.thumb', 'product.created', 'product.created_by', 'product.modified', 'product.modified_by', 'c.name as category_name')->orderby('product.id', 'desc');
+    //     if ($options['task'] == 'change-all') {
+    //         $result = $query->search()->paginate(5);
+    //     }
+    //     if ($options['task'] == 'change-active') {
+    //         $result = $query->where('product.status', 'active')->search()->paginate(5);
+    //     }
+    //     if ($options['task'] == 'change-inactive') {
+    //         $result = $query->where('product.status', 'inactive')->search()->paginate(5);
+    //     }
+    //     //======= show ra trang chủ ========
+    //     if ($options['task'] == 'show-product') {
+    //         $result = $query->where('product.status', 'active')->paginate(12);
+    //     }
+    //     //======= show sản phẩm nổi bật ra trang chủ ========
+    //     if ($options['task'] == 'show-featured') {
+    //         $result = $query->where('product.type', 'featured')->get();
+    //     }
+    //     //======= show sản phẩm theo danh mục ra trang chủ ========
+    //     if ($options['task'] == 'show-with-category') {
+    //         $result = $query->where('product.category_id', $request->id)->paginate(12);
+    //     }
+    //     return $result;
+    // }
 
     public function children()
     {
@@ -60,14 +60,14 @@ class ProductModel extends Model
     }
 
     //localscope
-    public function scopeSearch($query)
-    {
+    // public function scopeSearch($query)
+    // {
 
-        if ($search_value = request()->search_value) {
-            $query = $query->where('p.name', 'like', '%' . $search_value . '%');
-        }
-        return $query;
-    }
+    //     if ($search_value = request()->search_value) {
+    //         $query = $query->where('p.name', 'like', '%' . $search_value . '%');
+    //     }
+    //     return $query;
+    // }
 
     public function saveItem($params = null, $options = null)
     {
