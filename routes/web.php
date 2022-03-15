@@ -24,7 +24,7 @@ use App\Http\Controllers\Frontend\PostController as FrontendPostController;
 use App\Http\Controllers\Frontend\ShopController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
-
+use Symfony\Component\Routing\Route as RoutingRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +119,7 @@ Route::group(['prefix' => $prefixAdmin,'namespace' => 'Admin','middleware'=>['pe
         Route::get('/status=inactive',                  [$controller, 'showInactive'])->name("$prefix/showInactive");
         Route::get('/change-status-{status}/{id?}',     [$controller, 'status'])->name("$prefix/status")->where('id', '[0-9]+');
         Route::get('/change-display-{display}/{id?}',   [$controller, 'display'])->name("$prefix/display")->where('id', '[0-9]+');
+        Route::post('/category-{id?}-order',            [$controller, 'orderItem'])->name("$prefix.category.order");
         // Route::get('change-status-{status}/{id}',   ['as' => $controllerName . '/status',      'uses' => $controller . 'status'])->where('id', '[0-9]+');
     });
 
@@ -202,7 +203,7 @@ Route::group(['prefix' => $prefixHome,'namespace' => 'Frontend',], function () u
     $prefix     = '';
     $controller = AuthController::class;
     Route::group(['prefix' => $prefix], function () use ($controller) {
-        
+
 
         Route::get('/login',                            [$controller, 'login'])->middleware('login')->name("login");
         Route::post('/checklogin',                      [$controller, 'checklogin'])->name("checklogin");
@@ -234,7 +235,7 @@ Route::group(['prefix' => $prefixHome,'namespace' => 'Frontend',], function () u
         Route::get('/danh-muc={category_name}/{id?}',    [$controller, 'getProductCate'])->name("$prefix/danh-muc");
     });
 
-    
+
     //===== CART ======
     $prefix     = 'gio-hang';
     $controller = CartController::class;
