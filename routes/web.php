@@ -129,6 +129,7 @@ Route::group(['prefix' => $prefixAdmin,'namespace' => 'Admin','middleware'=>['pe
     Route::group(['prefix' => $prefix], function () use ($prefix, $controller) {
         Route::get('/',                                 [$controller, 'index'])->name($prefix);
         Route::post('/exportProduct',                   [$controller, 'exportProduct'])->name('exportProduct');
+        Route::post('/importProduct',                   [$controller, 'importProduct'])->name('importProduct');
         Route::get('/edit/{id?}',                       [$controller, 'edit'])->name("$prefix/edit");
         Route::post('/update/{id?}',                    [$controller, 'update'])->name("$prefix/update");
         Route::get('/add',                              [$controller, 'add'])->name("$prefix/add");
