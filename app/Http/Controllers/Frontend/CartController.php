@@ -9,7 +9,6 @@ use App\Models\ProductModel as ProductModel;
 use Illuminate\Http\Request;
 use Session;
 
-session_start();
 class CartController extends Controller
 {
     public $model = null;
@@ -53,7 +52,7 @@ class CartController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Thêm sản phẩm thành công',
-        ], status: 200);
+        ]);
     }
 
     public function delete(Request $request)

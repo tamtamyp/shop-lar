@@ -10,7 +10,6 @@ use App\Models\OrderDetailModel as OrderDetailModel;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 
-session_start();
 class CheckoutController extends Controller
 {
 
