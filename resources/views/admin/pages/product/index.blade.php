@@ -163,13 +163,21 @@ $prefix = 'product';
                                         <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
                                     </div>
                                     {!! Form::close() !!}
-                                    <div class="col-sm-2 mb-lg-4">
+                                    <div class="col-sm-1 mb-lg-4">
                                         <form action="{{ route('exportProduct') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="status"
                                                 value="{{ request()->has('status') ? request()->status : '' }}" />
                                             <button class="btn btn-success" type="submit">
                                                 <i class="fas fa-file-excel"></i> Export Excel
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-1 mb-lg-4">
+                                        <form action="{{ route('importProduct') }}" method="POST">
+                                            @csrf
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="fas fa-plus-circle"></i> Import Excel
                                             </button>
                                         </form>
                                     </div>

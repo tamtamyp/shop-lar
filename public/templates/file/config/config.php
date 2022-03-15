@@ -96,7 +96,7 @@ $config = array(
     | DO NOT put inside upload folder
     |
     */
-    'thumbs_base_path' => '/shop/public/templates/images/',
+    'thumbs_base_path' => './public/templates/images/',
 
     /*
     |--------------------------------------------------------------------------

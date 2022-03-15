@@ -57,6 +57,10 @@ class ProductController extends Controller
         return $response;
     }
 
+    public function importProduct(){
+        return 123;
+    }
+
     public function delete(Request $request, $id)
     {
         $items = mainModel::find($id);
