@@ -74,7 +74,7 @@ $prefix = 'product';
                                                 <div class="form-group">
                                                     <label>Mô tả ngắn </label>
                                                     <textarea class="ckeditor"
-                                                        name="description">{{ $description }}</textarea>
+                                                        name="description">{!! $description !!}</textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Nội dung </label>

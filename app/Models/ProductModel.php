@@ -11,6 +11,7 @@ class ProductModel extends Model
     use HasFactory;
     protected $table = 'product';
     public $timestamps = false;
+    protected $fillable = ['id', 'name', 'category_id', 'description', 'content', 'price', 'sale_price', 'thumb', 'thumb_list', 'status', 'type', 'created', 'created_by', 'modified', 'modified_by'];
 
     // public function __construct()
     // {

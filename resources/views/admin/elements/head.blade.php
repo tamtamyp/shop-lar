@@ -25,6 +25,9 @@
 
 {{-- back to top --}}
 <style type="text/css">
+    .modalImportExcel {
+        width: 30%;
+    }
     .back-to-top {
         position: fixed;
         top: auto;
