@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Exports\ProductExport;
+use App\Imports\ProductImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -41,7 +42,7 @@ class ProductController extends Controller
         if (!empty($search_value)) {
             $query = $query->where('name', 'like', '%' . $search_value . '%');
         }
-        $items = $query->paginate(5);
+        $items = $query->paginate(10);
         return view(
             $this->pathViewController . 'index',
             compact('status', 'items')
@@ -57,8 +58,11 @@ class ProductController extends Controller
         return $response;
     }
 
-    public function importProduct(){
-        return 123;
+    public function importProduct(Request $request){
+        $file=$request->file;
+        Excel::import(new ProductImport(),$file, \Maatwebsite\Excel\Excel::XLSX);
+        // dd($file);
+        return back();
     }
 
     public function delete(Request $request, $id)

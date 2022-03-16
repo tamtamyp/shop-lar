@@ -174,12 +174,11 @@ $prefix = 'product';
                                         </form>
                                     </div>
                                     <div class="col-sm-1 mb-lg-4">
-                                        <form action="{{ route('importProduct') }}" method="POST">
-                                            @csrf
-                                            <button class="btn btn-success" type="submit">
+                                        
+                                            <button class="btn btn-success" type="submit" data-toggle="modal"
+                                                data-target="#exampleModalCenter">
                                                 <i class="fas fa-plus-circle"></i> Import Excel
                                             </button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +356,7 @@ $prefix = 'product';
 
             <div class="row" style=" @if (count($items) < 1) display:none; @endif
 
-                                                                                ">
+                                                                                    ">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
@@ -408,5 +407,7 @@ $prefix = 'product';
             </div>
             <!--end-box-pagination-->
         </div>
+        @include('admin.pages.product.modalImportExcel')
+
         <!-- /page content -->
     @endsection
