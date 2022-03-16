@@ -55,7 +55,7 @@ class ProductModel extends Model
     {
 
         $result = null;
-        $query = $this->join('category as c', 'category_id', '=', 'c.id')->select('product.id', 'product.name', 'product.content', 'product.description', 'product.price', 'product.sale_price', 'product.status', 'product.type', 'product.thumb', 'product.thumb_list', 'product.created', 'product.created_by', 'product.modified', 'product.modified_by', 'c.name as category_name')->where('product.id', $request->id);
+        $query = $this->join('category as c', 'category_id', '=', 'c.id')->select('p.id', 'p.name', 'p.content', 'p.description', 'p.price', 'p.sale_price', 'p.status', 'p.type', 'p.thumb', 'p.thumb_list', 'p.created', 'p.created_by', 'p.modified', 'p.modified_by', 'c.name as category_name')->where('p.id', $request->id);
         $result = $query->get()->toArray();
         return $result;
     }
