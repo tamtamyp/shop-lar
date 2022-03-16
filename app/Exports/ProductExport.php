@@ -45,7 +45,8 @@ class ProductExport implements WithEvents
         $products = $query->orderBy('id','desc')->get();
         // dd($products);
 
-        // Party starts at row 3
+        // Party starts at row 9
+        
         $iteration = 9;
 
         foreach ($products as $product) {

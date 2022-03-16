@@ -19,16 +19,16 @@ class ProductImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         $data = new ProductModel([
-            'name'        => $row[0]!=='NULL'?$row[0]:'',
-            'category_id' => $row[1]!=='NULL'?$row[1]:'',
-            'description' => $row[2]!=='NULL'?$row[2]:'',
-            'content'     => $row[3]!=='NULL'?$row[3]:'',
-            'price'       => $row[4]!=='NULL'?$row[4]:'',
-            'sale_price'  => $row[5]!=='NULL'?$row[5]:'',
-            'thumb'       => $row[6]!=='NULL'?$row[6]:'',
-            'thumb_list'  => $row[7]!=='NULL'?$row[7]:'',
-            'status'      => $row[8]!=='NULL'?$row[8]:'',
-            'type'        => $row[9]!=='NULL'?$row[9]:'',
+            'name'        => $row[0]!=='NULL'?$row[0]:NULL,
+            'category_id' => $row[1]!=='NULL'?$row[1]:NULL,
+            'description' => $row[2]!=='NULL'?$row[2]:NULL,
+            'content'     => $row[3]!=='NULL'?$row[3]:NULL,
+            'price'       => $row[4]!=='NULL'?$row[4]:NULL,
+            'sale_price'  => $row[5]!=='NULL'?$row[5]:NULL,
+            'thumb'       => $row[6]!=='NULL'?$row[6]:NULL,
+            'thumb_list'  => $row[7]!=='NULL'?$row[7]:NULL,
+            'status'      => $row[8]!=='NULL'?$row[8]:NULL,
+            'type'        => $row[9]!=='NULL'?$row[9]:NULL,
         ]);
         // dd($data);
         return $data;
