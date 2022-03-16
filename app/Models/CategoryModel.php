@@ -16,6 +16,9 @@ class CategoryModel extends Model
     {
         $this->table  = 'category';
     }
+    public function products() {
+        return $this->hasMany('App\Models\ProductModel');
+    }
     public function getItems($params = null,$options = null)
     {
 

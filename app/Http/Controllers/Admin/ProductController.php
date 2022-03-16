@@ -35,7 +35,10 @@ class ProductController extends Controller
         // $items = $this->model->getItems($request,$this->params, ['task' => 'show-product']);
         $status = $request->status;
         $search_value = $request->search_value;
-        $query = mainModel::orderby('id','desc');
+        $query = mainModel::addSelect(['category_name'=>CategoryModel::select('name')
+        ->whereColumn('id', 'product.category_id')
+        ->orderby('product.id', 'desc')
+        ]);
         if (!empty($status)) {
             $query = $query->where('status', $status);
         }
@@ -58,9 +61,10 @@ class ProductController extends Controller
         return $response;
     }
 
-    public function importProduct(Request $request){
-        $file=$request->file;
-        Excel::import(new ProductImport(),$file, \Maatwebsite\Excel\Excel::XLSX);
+    public function importProduct(Request $request)
+    {
+        $file = $request->file;
+        Excel::import(new ProductImport(), $file, \Maatwebsite\Excel\Excel::XLSX);
         // dd($file);
         return back();
     }
@@ -101,7 +105,10 @@ class ProductController extends Controller
     public function edit(Request $request)
     {
 
-        $items = $this->model->getEdit($request);
+        $items = mainModel::addSelect(['category_name'=>CategoryModel::select('name')
+        ->whereColumn('id', 'product.category_id')
+        ->orderby('product.id', 'desc')
+        ])->where('id', $request->id)->get();
         $id = $request->id;
         $category = CategoryModel::where('parent_id', 0)->where('status', 'active')->orderby('id', 'ASC')->get();
         return view($this->pathViewController . 'edit', ['items' => $items], ['category' => $category]);

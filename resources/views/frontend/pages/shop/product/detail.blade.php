@@ -9,19 +9,35 @@ $prefix = 'san-pham';
 
         <div class="container">
             @foreach ($items as $item)
+                @if (empty($item['thumb_list']))
+                    {
+                    <style>
+                        button.owl-prev  {
+                            display: none
+                        }
+
+                        ;
+
+                        button.owl-next {
+                            display: none;
+                        }
+
+                    </style>
+                    }
+                @endif
                 @php
-                    $id           = $item['id'];
-                    $name         = $item['name'];
-                    $description  = $item['description'];
-                    $content      = $item['content'];
-                    $status       = $item['status'];
+                    $id = $item['id'];
+                    $name = $item['name'];
+                    $description = $item['description'];
+                    $content = $item['content'];
+                    $status = $item['status'];
                     $categoryName = $item['category_name'];
-                    $thumb        = $item['thumb'];
-                    $type         = $item['type'];
-                    $created      = $item['created'];
-                    $created_by   = $item['created_by'];
-                    $price        = $item['price'];
-                    $sale_price   = $item['sale_price'];
+                    $thumb = $item['thumb'];
+                    $type = $item['type'];
+                    $created = $item['created'];
+                    $created_by = $item['created_by'];
+                    $price = $item['price'];
+                    $sale_price = $item['sale_price'];
                 @endphp
                 <div class="wrap-breadcrumb">
                     <ul>
@@ -73,21 +89,24 @@ $prefix = 'san-pham';
                                             <del aria-hidden="true"><span
                                                     style="color:red;">{{ number_format($price) }}&nbsp;</span></del>
                                             <span>{{ number_format($sale_price) }}&nbsp;<span>₫</span></span>
-                                        @else {{ number_format($price) }}&nbsp;<span>₫</span>
+                                        @else
+                                            {{ number_format($price) }}&nbsp;<span>₫</span>
                                         @endif
                                     </span></div>
                                 <div class="quantity">
                                     <span>Quantity:</span>
                                     <div class="quantity-input">
-                                        <input class="update-Quantity" data-id="{{$id}}" type="text" name="product-quatity" value="1" data-max="120" pattern="[0-9]*">
+                                        <input class="update-Quantity" data-id="{{ $id }}" type="text"
+                                            name="product-quatity" value="1" data-max="120" pattern="[0-9]*">
 
                                         <a class="btn btn-reduce" href="#"></a>
                                         <a class="btn btn-increase" href="#"></a>
                                     </div>
                                 </div>
                                 <div class="wrap-butons">
-                                    <a href="#" data-url="{{route('gio-hang/add',['id'=>$id])}}" class="btn add-to-cart">Add to Cart</a>
-                                    
+                                    <a href="#" data-url="{{ route('gio-hang/add', ['id' => $id]) }}"
+                                        class="btn add-to-cart">Add to Cart</a>
+
                                 </div>
                             </div>
                             <div class="advance-info">
@@ -98,7 +117,7 @@ $prefix = 'san-pham';
                                     <div class="tab-content-item active" id="description">
                                         {!! $content !!}
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -169,7 +188,7 @@ $prefix = 'san-pham';
                                         <li class="product-item">
                                             <div class="product product-widget-style">
                                                 <div class="thumbnnail">
-                                                    <a href="{{route('san-pham/index', ['product_id' => $id, 'product_name' => Str::slug($name)])}}"
+                                                    <a href="{{ route('san-pham/index', ['product_id' => $id, 'product_name' => Str::slug($name)]) }}"
                                                         title="Radiant-360 R6 Wireless Omnidirectional Speaker [White]">
                                                         <figure><img
                                                                 src="{{ asset('templates/images') }}/{!! $thumb !!}"
@@ -177,12 +196,13 @@ $prefix = 'san-pham';
                                                     </a>
                                                 </div>
                                                 <div class="product-info">
-                                                    <a href="{{route('san-pham/index', ['product_id' => $id, 'product_name' => Str::slug($name)])}}"
+                                                    <a href="{{ route('san-pham/index', ['product_id' => $id, 'product_name' => Str::slug($name)]) }}"
                                                         class="product-name"><span>{!! substr($name, 0, 50) !!}</span></a>
                                                     <div class="wrap-price"><span class="product-price">
                                                             @if (!empty($sale_price))
                                                                 <span>{{ number_format($sale_price) }}&nbsp;<span>₫</span></span>
-                                                            @else {{ number_format($price) }}&nbsp;<span>₫</span>
+                                                            @else
+                                                                {{ number_format($price) }}&nbsp;<span>₫</span>
                                                             @endif
                                                         </span>
                                                     </div>
@@ -354,12 +374,10 @@ $prefix = 'san-pham';
 
                 </div>
                 <!--end row-->
-
             @endforeach
         </div>
         <!--end container-->
 
     </main>
     <!--main area-->
-
 @endsection
