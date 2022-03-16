@@ -37,8 +37,7 @@ class ProductController extends Controller
         $search_value = $request->search_value;
         $query = mainModel::addSelect(['category_name'=>CategoryModel::select('name')
         ->whereColumn('id', 'product.category_id')
-        ->orderby('product.id', 'desc')
-        ]);
+        ])->orderby('product.id', 'desc');
         if (!empty($status)) {
             $query = $query->where('status', $status);
         }
