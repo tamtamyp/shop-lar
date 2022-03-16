@@ -29,6 +29,7 @@ class ProductImport implements ToModel, WithStartRow
             'thumb_list'  => $row[7]!=='NULL'?$row[7]:NULL,
             'status'      => $row[8]!=='NULL'?$row[8]:NULL,
             'type'        => $row[9]!=='NULL'?$row[9]:NULL,
+            'created_by'  => session()->get('username'),
         ]);
         // dd($data);
         return $data;

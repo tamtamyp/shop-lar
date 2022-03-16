@@ -283,14 +283,12 @@ $prefix = 'product';
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <p><i class="fa fa-user"> {{ $created_by }}</i></p>
-                                                        <p><i class="fa fa-clock-o"> {{ $created }}</i></p>
+                                                        <p><i class="fa fa-user"></i> {{ $created_by }}</p>
+                                                        <p><i class="fa fa-clock-o"></i> {{ $created }}</p>
                                                     </td>
                                                     <td>
-                                                        <p><i class="fa fa-user change-by-{{ $id }}">
-                                                                {{ $modified_by }}</i></p>
-                                                        <p><i class="fa fa-clock-o change-time-{{ $id }}">
-                                                                {{ $modified }}</i></p>
+                                                        <p><i class="fa fa-user change-by-{{ $id }}"></i> {{ $modified_by }}</p>
+                                                        <p><i class="fa fa-clock-o change-time-{{ $id }}"></i> {{ $modified }}</p>
                                                     </td>
                                                     <td>
                                                         <select
