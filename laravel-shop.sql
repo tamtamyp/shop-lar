@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 22, 2021 lúc 03:07 AM
--- Phiên bản máy phục vụ: 10.4.20-MariaDB
--- Phiên bản PHP: 8.0.9
+-- Máy chủ: localhost:3306
+-- Thời gian đã tạo: Th5 27, 2022 lúc 04:42 AM
+-- Phiên bản máy phục vụ: 5.7.33
+-- Phiên bản PHP: 7.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `shoplaravel`
+-- Cơ sở dữ liệu: `laravel-shop`
 --
 
 -- --------------------------------------------------------
@@ -32,8 +32,8 @@ CREATE TABLE `category` (
   `name` varchar(200) CHARACTER SET utf8 NOT NULL,
   `slug` varchar(255) NOT NULL,
   `status` text NOT NULL,
-  `parent_id` int(11) NOT NULL DEFAULT 0,
-  `created` timestamp NULL DEFAULT current_timestamp(),
+  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(45) DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `modified_by` varchar(45) DEFAULT NULL,
@@ -50,7 +50,7 @@ INSERT INTO `category` (`id`, `name`, `slug`, `status`, `parent_id`, `created`, 
 (3, 'Nam', 'nam', 'active', 2, '2019-05-03 17:00:00', 'admin', '2021-11-19 15:32:24', 'rurikeigo', 'list'),
 (4, 'Nữ', 'nu', 'active', 2, '2019-05-03 17:00:00', 'admin', '2021-11-19 15:32:39', 'rurikeigo', 'list'),
 (5, 'Khoa học', '0', 'active', 0, '2019-05-03 17:00:00', 'admin', '2021-11-12 21:19:27', 'rurikeigo', 'list'),
-(6, 'Nam', 'nam', 'active', 1, '2019-05-03 17:00:00', 'admin', '2021-11-22 02:42:09', 'rurikeigo', 'grid'),
+(6, 'Nam', 'nam', 'active', 1, '2019-05-03 17:00:00', 'admin', '2021-11-20 20:30:39', 'rurikeigo', 'grid'),
 (18, 'Nữ', 'nu', 'active', 1, '2021-11-16 07:07:42', 'rurikeigo', '2021-11-16 17:09:47', 'rurikeigo', 'grid');
 
 -- --------------------------------------------------------
@@ -61,7 +61,7 @@ INSERT INTO `category` (`id`, `name`, `slug`, `status`, `parent_id`, `created`, 
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `order_date` date NOT NULL DEFAULT current_timestamp(),
+  `order_date` date NOT NULL,
   `order_note` varchar(600) COLLATE utf8_unicode_ci DEFAULT NULL,
   `customer_id` int(11) NOT NULL,
   `order_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `orders` (
   `order_address` varchar(600) COLLATE utf8_unicode_ci NOT NULL,
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `total` int(11) NOT NULL,
-  `modified` datetime NOT NULL DEFAULT current_timestamp(),
+  `modified` datetime NOT NULL,
   `modified_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -86,31 +86,6 @@ INSERT INTO `orders` (`id`, `order_date`, `order_note`, `customer_id`, `order_na
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `order_detail`
---
-
-CREATE TABLE `order_detail` (
-  `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `order_detail`
---
-
-INSERT INTO `order_detail` (`order_id`, `product_id`, `price`, `quantity`) VALUES
-(4, 10, 2000000, 2),
-(5, 10, 1650000, 2),
-(5, 4, 450000, 1),
-(6, 9, 2200000, 1),
-(7, 9, 2200000, 1),
-(8, 10, 1650000, 1);
-
--- --------------------------------------------------------
-
---
 -- Cấu trúc bảng cho bảng `post`
 --
 
@@ -118,14 +93,14 @@ CREATE TABLE `post` (
   `id` int(11) NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
   `status` varchar(225) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `thumb` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created` datetime DEFAULT current_timestamp(),
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `modified_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `publish_at` date DEFAULT current_timestamp(),
+  `publish_at` date DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
@@ -134,7 +109,10 @@ CREATE TABLE `post` (
 --
 
 INSERT INTO `post` (`id`, `category_id`, `name`, `content`, `status`, `thumb`, `created`, `created_by`, `modified`, `modified_by`, `publish_at`, `type`) VALUES
-(23, 6, 'Asus ra mắt Zenfone 6 với camera lật tự động', '<p>Với thiết kế màn hình tràn viền hoàn toàn không tai thỏ, camera chính 48 megapixel trên Zenfone 6 có thể lật từ sau ra trước biến thành camera selfie.</p>\r\n\r\n<p>Zenfone 6 là một trong những smartphone có viền màn hình mỏng nhất trên thị trường với tỷ lệ màn hình hiển thị chiếm tới 92% diện tích mặt trước. Máy có màn hình 6,4 inch tràn viền ra cả bốn cạnh, không tai thỏ như một số mẫu Zenfone trước và cũng không dùng thiết kế đục lỗ như Galaxy S10, S10+</p>', 'active', 'post/banner.jpg', '2019-05-17 00:00:00', 'hailan', '2021-11-22 03:27:32', 'rurikeigo', '2019-05-16', 'normal');
+(23, 6, 'Asus ra mắt Zenfone 6 với camera lật tự động', '<p>Với thiết kế màn hình tràn viền hoàn toàn không tai thỏ, camera chính 48 megapixel trên Zenfone 6 có thể lật từ sau ra trước biến thành camera selfie.</p>\r\n\r\n<p>Zenfone 6 là một trong những smartphone có viền màn hình mỏng nhất trên thị trường với tỷ lệ màn hình hiển thị chiếm tới 92% diện tích mặt trước. Máy có màn hình 6,4 inch tràn viền ra cả bốn cạnh, không tai thỏ như một số mẫu Zenfone trước và cũng không dùng thiết kế đục lỗ như Galaxy S10, S10+</p>', 'active', 'post/banner.jpg', '2019-05-17 00:00:00', 'hailan', '2021-11-17 14:39:49', 'rurikeigo', '2019-05-16', 'normal'),
+(25, 12, 'slider-12aaaaaaaaa', '<p>aaaaaaaa</p>', 'active', 'banner.jpg', '2021-11-10 18:13:55', 'rurikeigo', '2021-11-12 17:32:07', NULL, NULL, 'normal'),
+(28, 12, 'slider-12', '<p>aaaaaaaaaaa</p>', 'inactive', 'banner.jpg', '2021-11-10 18:32:33', 'rurikeigo', '2021-11-13 11:27:02', 'rurikeigo', '2021-11-10', 'featured'),
+(29, 18, 'aaaaaa', '<p>aaaaaaaaaa</p>', 'active', NULL, '2022-05-18 16:16:18', 'rurikeigo', NULL, NULL, NULL, 'normal');
 
 -- --------------------------------------------------------
 
@@ -146,15 +124,15 @@ CREATE TABLE `product` (
   `id` int(10) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `category_id` varchar(600) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `content` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `content` text COLLATE utf8_unicode_ci,
   `price` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `sale_price` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `thumb` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `thumb_list` varchar(600) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created` datetime DEFAULT current_timestamp(),
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `modified` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `modified_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -174,7 +152,7 @@ INSERT INTO `product` (`id`, `name`, `category_id`, `description`, `content`, `p
 (7, 'ÁO NGŨ THÂN TAY CHẼN HSSV VẢI ĐŨI TUYẾT NHẬT CHO NAM HOẶC NỮ', '1', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Áo Ngũ Thân Tay Chẽn HSSV vải đũi tuyết Nhật cho nam hoặc nữ</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Áo Ngũ Thân Tay Chẽn HSSV vải đũi tuyết Nhật cho nam hoặc nữ là may bằng vải đũi tuyết Nhật, may 1 lớp, hướng tới đối tượng HSSV. Có 4 màu để lựa chọn: Xanh trời, xanh rêu, hồng vỏ đỗ, xám nhạt.</p>\r\n\r\n<ul>\r\n	<li>Chất liệu vải đũi tuyết Nhật được lựa chọn cẩn thận, rất mát, thấm hút mồ hôi, ít nhăn, không phai màu,và phù hợp với học sinh, sinh viên khi mặc hàng ngày và vận động nhiều.</li>\r\n</ul>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo: 800k với đối tượng HSSV, và 900k với các đối tượng khác. Sản phẩm này, shop khuyến khích phối với quần jean, quần thô năng động trẻ trung</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;May thêm quần +200k.</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;May thêm khăn nam +200k, khăn nữ 1 vòng +100k, khăn nữ 2 vòng +150k</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n</div>', '<blockquote>\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Áo Ngũ Thân Tay Chẽn HSSV vải đũi tuyết Nhật cho nam hoặc nữ là may bằng vải đũi tuyết Nhật, may 1 lớp, hướng tới đối tượng HSSV. Có 4 màu để lựa chọn: Xanh trời, xanh rêu, hồng vỏ đỗ, xám nhạt.</p>\r\n</blockquote>\r\n\r\n<ul>\r\n	<li>Chất liệu vải đũi tuyết Nhật được lựa chọn cẩn thận, rất mát, thấm hút mồ hôi, ít nhăn, không phai màu,và phù hợp với học sinh, sinh viên khi mặc hàng ngày và vận động nhiều.</li>\r\n</ul>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo: 800k với đối tượng HSSV, và 900k với các đối tượng khác. Sản phẩm này, shop khuyến khích phối với quần jean, quần thô năng động trẻ trung</p>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;May thêm quần +200k.</p>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;May thêm khăn nam +200k, khăn nữ 1 vòng +100k, khăn nữ 2 vòng +150k</p>\r\n\r\n<p style=\"text-align:justify\">&nbsp;</p>\r\n\r\n<p style=\"text-align:justify\"><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>', '900000', '800000', 'product/1WV05410-600x900.jpg', '[\"product/1WV05576-600x900.jpg\",\"product/1WV05568-600x900.jpg\",\"product/1WV05246-600x900.jpg\"]', 'active', 'normal', '2021-11-19 15:34:48', 'rurikeigo', NULL, NULL),
 (8, 'FULLSET ÁO NGŨ THÂN TAY CHẼN VẢI GẤM IN HOA VĂN CHO NAM', '1', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Áo Ngũ Thân Tay Chẽn vải gấm in hoa văn cho nam</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set áo Ngũ Thân Tay Chẽn vải gấm in hoa văn cho nam gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải gấm in hoa văn chìm, có thể lựa chọn màu bất kỳ và bộ hoa văn<br />\r\n– Quần cotton trắng<br />\r\n– Khăn đóng sẵn cho nam</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 2050k</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo Ngũ Thân Tay Chẽn: 1650k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n</div>', '<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set áo Ngũ Thân Tay Chẽn vải gấm in hoa văn cho nam gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải gấm in hoa văn chìm, có thể lựa chọn màu bất kỳ và bộ hoa văn<br />\r\n– Quần cotton trắng<br />\r\n– Khăn đóng sẵn cho nam</p>\r\n\r\n<ul>\r\n	<li>File hoa văn của áo Ngũ Thân Tay Chẽn được thiết kế độc quyền, màu sắc hài hòa, sử dụng công nghệ in tiên tiến nhất, tạo đường in sắc nét và siêu bền màu, rất được các Studio và nháy ưa chuộng vì lên ảnh đẹp.</li>\r\n	<li>Áo Ngũ Thân Tay Chẽn may bằng vải gấm có hoa văn chìm đặc biệt, tạo nên sự sang trọng và có hồn cho áo, rất đặc trưng và dễ phân biệt với các áo bên khác, tạo chiều sâu cho bức ảnh, video.</li>\r\n	<li>Dây khuy của Áo Ngũ Thân Tay Chẽn sử dụng kỹ thuật cải tiến, và sử dụng cúc đồng, đem lại sự tinh tế, quý phái cho sản phẩm.</li>\r\n	<li>Áo Ngũ Thân Tay Chẽn may 2 lớp, với lớt lót trong là vải habutai Nhật, mềm mại, thấm hút mồ hôi, mặt vải lạnh, sờ thích, êm da</li>\r\n</ul>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 2050k</p>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo Ngũ Thân Tay Chẽn: 1650k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p style=\"text-align:justify\"><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n\r\n<p style=\"text-align:justify\">Nguồn ảnh: Feedback khách hàng chị Lan Anh</p>', '3000000', '2050000', 'product/SAN_5709-copy-768x1152.jpg', '[\"product/WWV00980-600x900.jpg\",\"product/WWV00971-600x900.jpg\",\"product/WWV00914-600x900.jpg\"]', 'active', 'normal', '2021-11-19 15:37:08', 'rurikeigo', '2021-11-19 15:37:37', NULL),
 (9, 'FULLSET ÁO NGŨ THÂN TAY CHẼN VẢI GẤM IN HOA VĂN CHO NỮ', '1', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Fullset Ngũ Thân Tay Chẽn vải gấm in hoa văn</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set áo Ngũ Thân Tay Chẽn vải gấm in hoa văn cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải gấm in hoa văn chìm, có thể lựa chọn màu bất kỳ và bộ hoa văn<br />\r\n– Quần cotton trắng<br />\r\n– Khăn vành đóng sẵn cho nữ hoặc khăn lươn</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset:</p>\r\n\r\n<ul>\r\n	<li>2200k nếu dùng khăn vành đóng sẵn</li>\r\n	<li>1950k nếu dùng khăn lươn 1 vòng</li>\r\n	<li>2000k nếu dùng khăn lươn 2 vòng</li>\r\n</ul>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo Ngũ Thân Tay Chẽn: 1650k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n\r\n<p>Nguồn ảnh: hiệu ảnh Việt Phục Bull</p>\r\n</div>', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Fullset Ngũ Thân Tay Chẽn vải gấm in hoa văn</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set áo Ngũ Thân Tay Chẽn vải gấm in hoa văn cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải gấm in hoa văn chìm, có thể lựa chọn màu bất kỳ và bộ hoa văn<br />\r\n– Quần cotton trắng<br />\r\n– Khăn vành đóng sẵn cho nữ hoặc khăn lươn</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset:</p>\r\n\r\n<ul>\r\n	<li>2200k nếu dùng khăn vành đóng sẵn</li>\r\n	<li>1950k nếu dùng khăn lươn 1 vòng</li>\r\n	<li>2000k nếu dùng khăn lươn 2 vòng</li>\r\n</ul>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng áo Ngũ Thân Tay Chẽn: 1650k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n\r\n<p>Nguồn ảnh: hiệu ảnh Việt Phục Bull</p>\r\n</div>', '3000000', '2200000', 'product/SAN_6032-copy-768x1152.jpg', '[\"product/SAN_6051-copy-600x900.jpg\",\"product/SAN_6033-copy-768x1152.jpg\",\"product/152001882_269778958105730_2032000446896798078_n-600x900.jpg\"]', 'active', 'normal', '2021-11-19 15:39:42', 'rurikeigo', NULL, NULL),
-(10, 'FULLSET ÁO NGŨ THÂN TAY CHẼN VẢI SA HOẶC TƠ CHO NỮ', '1', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … Màu vải lựa chọn trong bảng màu của shop (inbox để được tư vấn).<br />\r\n– Quần cotton trắng<br />\r\n– Khăn lươn một vòng cho nữ</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 1650k. (Nếu lựa chọn khăn lươn 2 vòng thì +50k)</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng Áo Ngũ Thân Tay Chẽn: 1350k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n</div>', '<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … Màu vải lựa chọn trong bảng màu của shop (inbox để được tư vấn).<br />\r\n– Quần cotton trắng<br />\r\n– Khăn lươn một vòng cho nữ</p>\r\n\r\n<ul>\r\n	<li>Chất liệu vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … đều là những chất liệu sang trọng, phù hợp với các sự kiện lớn, các dịp lễ trọng đại, chụp ảnh cưới, …</li>\r\n	<li>Dây khuy của Áo Ngũ Thân Tay Chẽn V’style sử dụng kỹ thuật cải tiến, và sử dụng cúc đồng, đem lại sự tinh tế, quý phái cho sản phẩm.</li>\r\n	<li>Áo Ngũ Thân Tay Chẽn V’style may 2 lớp, với lớt lót trong là vải habutai Nhật, mềm mại, thấm hút mồ hôi, mặt vải lạnh, sờ thích, êm da</li>\r\n</ul>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 1650k. (Nếu lựa chọn khăn lươn 2 vòng thì +50k)</p>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng Áo Ngũ Thân Tay Chẽn: 1350k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p style=\"text-align:justify\"><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>', '2000000', '1650000', 'product/SAN_6219-copy-768x1152.jpg', NULL, 'active', 'featured', '2021-11-19 15:43:39', 'rurikeigo', '2021-11-22 03:45:55', 'rurikeigo');
+(10, 'FULLSET ÁO NGŨ THÂN TAY CHẼN VẢI SA HOẶC TƠ CHO NỮ', '1', '<div class=\"product_meta\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<div class=\"sku-wrap\" style=\"box-sizing: border-box;\">Mã sản phẩm:&nbsp;Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ</div>\r\n</div>\r\n\r\n<div class=\"short-description\" style=\"box-sizing: border-box; margin: 10px 0px 0px; color: rgb(102, 102, 102); font-family: Roboto, sans-serif; font-size: 14px;\">\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … Màu vải lựa chọn trong bảng màu của shop (inbox để được tư vấn).<br />\r\n– Quần cotton trắng<br />\r\n– Khăn lươn một vòng cho nữ</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 1650k. (Nếu lựa chọn khăn lươn 2 vòng thì +50k)</p>\r\n\r\n<p><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng Áo Ngũ Thân Tay Chẽn: 1350k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>\r\n</div>', '<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Set Áo Ngũ Thân Tay Chẽn vải sa hoặc tơ cho nữ gồm<br />\r\n– Áo Ngũ Thân Tay Chẽn vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … Màu vải lựa chọn trong bảng màu của shop (inbox để được tư vấn).<br />\r\n– Quần cotton trắng<br />\r\n– Khăn lươn một vòng cho nữ</p>\r\n\r\n<ul>\r\n	<li>Chất liệu vải sa hàn hoặc vải tơ sống, tơ vân, tơ thủy ngư, tơ hoa cúc, tơ xước kim, … đều là những chất liệu sang trọng, phù hợp với các sự kiện lớn, các dịp lễ trọng đại, chụp ảnh cưới, …</li>\r\n	<li>Dây khuy của Áo Ngũ Thân Tay Chẽn V’style sử dụng kỹ thuật cải tiến, và sử dụng cúc đồng, đem lại sự tinh tế, quý phái cho sản phẩm.</li>\r\n	<li>Áo Ngũ Thân Tay Chẽn V’style may 2 lớp, với lớt lót trong là vải habutai Nhật, mềm mại, thấm hút mồ hôi, mặt vải lạnh, sờ thích, êm da</li>\r\n</ul>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá fullset: 1650k. (Nếu lựa chọn khăn lươn 2 vòng thì +50k)</p>\r\n\r\n<p style=\"text-align:justify\"><img alt=\"✨\" class=\"lazy loaded\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t7b/1.5/16/2728.png\" style=\"border-style:none; box-sizing:border-box; height:auto; max-width:100%; min-height:1px; vertical-align:middle; width:auto\" />&nbsp;Giá riêng Áo Ngũ Thân Tay Chẽn: 1350k.&nbsp;<strong>Nếu mua lẻ các món, vui lòng inbox facebook fanpage để được tư vấn</strong></p>\r\n\r\n<p style=\"text-align:justify\"><strong>ĐỒ MAY THEO SỐ ĐO NÊN KHÁCH HÀNG VUI LÒNG INBOX FACEBOOK FANPAGE ĐỂ ĐƯỢC TƯ VẤN ĐẦY ĐỦ</strong></p>', '2000000', '1651000', 'product/SAN_6219-copy-768x1152.jpg', NULL, 'active', 'normal', '2021-11-19 15:43:39', 'rurikeigo', '2021-11-20 14:14:21', 'rurikeigo');
 
 -- --------------------------------------------------------
 
@@ -185,7 +163,7 @@ INSERT INTO `product` (`id`, `name`, `category_id`, `description`, `content`, `p
 CREATE TABLE `setting` (
   `config_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `config_value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `modified` datetime DEFAULT NULL,
   `modified_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -218,7 +196,7 @@ CREATE TABLE `slider` (
   `link` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `thumb` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created` datetime DEFAULT current_timestamp(),
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT NULL,
   `created_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `modified_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -251,7 +229,7 @@ CREATE TABLE `user` (
   `avatar` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `level` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created` datetime DEFAULT current_timestamp(),
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `modified_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -277,12 +255,6 @@ INSERT INTO `user` (`id`, `username`, `email`, `fullname`, `password`, `avatar`,
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`id`) USING BTREE;
-
---
--- Chỉ mục cho bảng `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Chỉ mục cho bảng `post`
@@ -319,16 +291,10 @@ ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT cho bảng `orders`
---
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT cho bảng `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT cho bảng `product`

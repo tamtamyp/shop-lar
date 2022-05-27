@@ -8,8 +8,7 @@
                 <li class="">
                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                         aria-expanded="false">
-                        <img src="{{ asset('templates/images') }}
-                        @php
+                        <img src="{{ asset('templates/images') }}@php
                         echo '/'.session()->get('avatar');
                         @endphp" alt="">
                         {{-- <img src="{{ asset('templates/admin/img/img.jpg') }}" alt=""> --}}

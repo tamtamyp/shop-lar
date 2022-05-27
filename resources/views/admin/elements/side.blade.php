@@ -19,8 +19,7 @@ $menu = Templates::showSidebar();
                     
                 @endphp
                 @foreach ($user as $u)
-                    <img style="width:70px; height:70px" src="{{ asset('templates/images') }}
-                    @php
+                    <img style="width:70px; height:70px" src="{{ asset('templates/images') }}@php
                         session()->put('avatar', $u->avatar);
                         echo '/' . session()->get('avatar');
                     @endphp" alt="" class="img-circle profile_img">
