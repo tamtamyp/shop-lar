@@ -14,7 +14,7 @@ $prefix = 'media';
         <div>
             <iframe src="{{url('templates/file/dialog.php')}}" style="width:100%; height:800px; overflow-y:auto; border:none;"></iframe>
         </div>
-        
+        {{-- fix upload https://stackoverflow.com/questions/60544865/responsive-file-manager-and-tinymce/60552341#60552341 --}}
         <!--end-box-pagination-->
     </div>
 @endsection
